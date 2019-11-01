@@ -32,16 +32,36 @@ const setProductsAction = products => ({ type: SET_PRODUCTS, products });
 
 /////////////////////////USERS ACTION CREATORS//////////////////////////
 const setUsersAction = users => ({ type: SET_USERS, users });
-const updateUserAction = (user) => {
-  return { type: UPDATE_USER, id: user.id, username: user.username, email: user.email, password: user.password, firstName: user.firstName, lastName: user.lastName, shippingAddress: user.shippingAddress, billingAddress: user.billingAddress, wishlist: user.wishlist };
-}
+const updateUserAction = user => {
+  return {
+    type: UPDATE_USER,
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    password: user.password,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    shippingAddress: user.shippingAddress,
+    billingAddress: user.billingAddress,
+    wishlist: user.wishlist
+  };
+};
 
 /////////////////////////ORDER ACTION CREATORS//////////////////////////
 const setOrdersAction = orders => ({ type: SET_ORDERS, orders });
-const setOrderProducts = orderProducts => ({ type: SET_ORDERPRODUCTS, orderProducts });
-const deleteOrderProducts = id => ({type: DELETE_ORDERPRODUCT, id});
-const updateOrderProduct = orderProduct => ({ type: UPDATE_ORDERPRODUCT, orderProduct});
-const addOrderProduct = orderProduct => ({ type: ADD_ORDERPRODUCT, orderProduct});
+const setOrderProducts = orderProducts => ({
+  type: SET_ORDERPRODUCTS,
+  orderProducts
+});
+const deleteOrderProducts = id => ({ type: DELETE_ORDERPRODUCT, id });
+const updateOrderProduct = orderProduct => ({
+  type: UPDATE_ORDERPRODUCT,
+  orderProduct
+});
+const addOrderProduct = orderProduct => ({
+  type: ADD_ORDERPRODUCT,
+  orderProduct
+});
 
 ///////////////////////////////////////////////////////////////////////////
 ////////////////////////     REDUX - THUNKS    ////////////////////////////
@@ -85,12 +105,21 @@ const setProductsThunk = () => {
 const setUsersThunk = () => {
   return async dispatch => {
     const allUsers = (await axios.get('/api/users')).data;
-    // console.log('THUNKS ', allUsers);
     dispatch(setUsersAction(allUsers));
   };
 };
 
-const updateUserThunk = (id, username, email, password, firstName, lastName, shippingAddress, billingAddress, wishlist) => {
+const updateUserThunk = (
+  id,
+  username,
+  email,
+  password,
+  firstName,
+  lastName,
+  shippingAddress,
+  billingAddress,
+  wishlist
+) => {
   const user = {
     id: id,
     username: username,
@@ -101,8 +130,8 @@ const updateUserThunk = (id, username, email, password, firstName, lastName, shi
     shippingAddress: shippingAddress,
     billingAddress: billingAddress,
     wishlist: wishlist
-  }
-  return async (dispatch) => {
+  };
+  return async dispatch => {
     await axios.put(`/api/users/${user.id}`, {
       username: user.username,
       email: user.email,
@@ -113,7 +142,6 @@ const updateUserThunk = (id, username, email, password, firstName, lastName, shi
       billingAddress: user.billingAddress,
       wishlist: user.wishlist
     }).data;
-    // console.log('THUNKS ', allUsers);
     dispatch(updateUserAction(user));
   };
 };
@@ -130,30 +158,33 @@ const setOrdersThunk = () => {
 const setOrderProductsThunk = () => {
   return async dispatch => {
     const allOrderProducts = (await axios.get('/api/orderProducts')).data;
-    dispatch(setOrderProducts(allOrderProducts))
-  }
-}
+    dispatch(setOrderProducts(allOrderProducts));
+  };
+};
 
-const deleteOrderProductsThunk = (id) => {
+const deleteOrderProductsThunk = id => {
   return async dispatch => {
     await axios.delete(`/api/orderProducts/${id}`);
-    dispatch(deleteOrderProducts(id))
-  }
-}
+    dispatch(deleteOrderProducts(id));
+  };
+};
 
-const updateOrderProductThunk = (cartItem) => {
+const updateOrderProductThunk = cartItem => {
   return async dispatch => {
-    const updated =(await axios.put(`/api/orderProducts/${cartItem.id}`, cartItem)).data
-    dispatch(updateOrderProduct(updated))
-  }
-}
+    const updated = (await axios.put(
+      `/api/orderProducts/${cartItem.id}`,
+      cartItem
+    )).data;
+    dispatch(updateOrderProduct(updated));
+  };
+};
 
-const addOrderProductThunk = (cartItem) => {
+const addOrderProductThunk = cartItem => {
   return async dispatch => {
-    const item = (await axios.post('/api/orderProducts', cartItem)).data
-    dispatch(addOrderProduct(item))
-  }
-}
+    const item = (await axios.post('/api/orderProducts', cartItem)).data;
+    dispatch(addOrderProduct(item));
+  };
+};
 
 ///////////////////////////////////////////////////////////////////////////
 ////////////////////////     REDUX - REDUCERS    //////////////////////////
@@ -184,9 +215,21 @@ const userReducer = (state = [], action) => {
     state = action.users;
   }
   if (action.type === UPDATE_USER) {
-    return state.map(user => action.id === user.id ? {
-      ...user, username: action.username, email: action.email, password: action.password, firstName: action.firstName, lastName: action.lastName, shippingAddress: action.shippingAddress, billingAddress: action.billingAddress, wishlist: action.wishlist
-    } : user);
+    return state.map(user =>
+      action.id === user.id
+        ? {
+            ...user,
+            username: action.username,
+            email: action.email,
+            password: action.password,
+            firstName: action.firstName,
+            lastName: action.lastName,
+            shippingAddress: action.shippingAddress,
+            billingAddress: action.billingAddress,
+            wishlist: action.wishlist
+          }
+        : user
+    );
   }
   return state;
 };
@@ -204,14 +247,16 @@ const orderProdutsReducer = (state = [], action) => {
   if (action.type === SET_ORDERPRODUCTS) {
     state = action.orderProducts;
   }
-  if( action.type === DELETE_ORDERPRODUCT){
-    state = state.filter( item => item.id !== action.id)
+  if (action.type === DELETE_ORDERPRODUCT) {
+    state = state.filter(item => item.id !== action.id);
   }
-  if( action. type === UPDATE_ORDERPRODUCT){
-    state = state.map(item => item.id === action.item.id ? action.item : item)
+  if (action.type === UPDATE_ORDERPRODUCT) {
+    state = state.map(item =>
+      item.id === action.item.id ? action.item : item
+    );
   }
-  if(action.type === ADD_ORDERPRODUCT){
-    state = [...state, action.orderProduct]
+  if (action.type === ADD_ORDERPRODUCT) {
+    state = [...state, action.orderProduct];
   }
   return state;
 };

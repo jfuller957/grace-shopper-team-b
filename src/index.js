@@ -51,7 +51,6 @@ class _App extends Component {
             <Route exact path="/users/:id/cart" component={Cart} />
             <Route exact path="/orders" component={OrderHistory} />
             <Route exact path="/users/:id" component={User} />
-            {loggedIn && <Redirect to="/" />}
             <Route path="/login" component={Login} exact />
           </Switch>
         </HashRouter>
@@ -67,7 +66,6 @@ const App = connect(
     };
   },
   dispatch => {
-    // console.log(attemptSessionLogin);
     return {
       attemptSessionLogin: () => dispatch(attemptSessionLogin())
     };

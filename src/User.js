@@ -3,27 +3,49 @@ import { connect } from 'react-redux';
 import UserUpdateForm from './forms/UserUpdateForm';
 
 const _User = ({ users, auth, match }) => {
-  console.log('auth', auth)
+  console.log('auth', auth);
   return (
-    <div>
-      <ul>
-        {
-          users.map(user => user.id === match.params.id ? <li className={"user"} key={user.id}>Name: {user.firstName} {user.lastName}<br /><br />Username: {user.username} < br /> Email: {user.email}<br /> Password: {user.password}<br /><br />Shipping Address: {user.shippingAddress} <br />Billing Address: {user.billingAddress} <br />WishList: {user.wishlist}<br /></li> : '')
-        }
+    <div className="container">
+      <ul className="list-group">
+        {users.map(user =>
+          user.id === match.params.id ? (
+            <li className={'user'} key={user.id}>
+              Name: {user.firstName} {user.lastName}
+              <br />
+              <br />
+              Username: {user.username}
+              <br />
+              Email: {user.email}
+              <br />
+              Password: {user.password}
+              <br />
+              <br />
+              Shipping Address: {user.shippingAddress}
+              <br />
+              Billing Address: {user.billingAddress}
+              <br />
+              WishList: {user.wishlist}
+              <br />
+            </li>
+          ) : (
+            ''
+          )
+        )}
       </ul>
-      <br /><br />
-      <UserUpdateForm match={match.params.id} />
-    </div >
-  )
-}
+      <br />
+      <br />
+      <div className="container">
+        <UserUpdateForm match={match.params.id} />
+      </div>
+    </div>
+  );
+};
 
 const User = connect(({ users, auth }) => {
   return {
     users,
     auth
-  }
-})(_User)
-
-
+  };
+})(_User);
 
 export default User;
